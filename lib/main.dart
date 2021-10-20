@@ -1,12 +1,17 @@
 import "package:flutter/material.dart";
+import "package:firebase_core/firebase_core.dart";
 import "./screen/home.dart";
 
-void main() {
-  return runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  return runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
