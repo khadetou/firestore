@@ -1,3 +1,4 @@
+import 'package:firestore/widget/show_dialog.dart';
 import "package:flutter/material.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:font_awesome_flutter/font_awesome_flutter.dart";
@@ -11,89 +12,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var firestoreDb = FirebaseFirestore.instance.collection("board").snapshots();
-  TextEditingController? nameInputController;
-  TextEditingController? titleInputController;
-  TextEditingController? descriptionInputController;
-
-  @override
-  void initState() {
-    super.initState();
-    nameInputController = TextEditingController();
-    titleInputController = TextEditingController();
-    descriptionInputController = TextEditingController();
-  }
-
-  _showDialog(BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: const EdgeInsets.all(10),
-          content: Column(
-            children: <Widget>[
-              const Text("Fill out the form"),
-              Expanded(
-                child: TextField(
-                  autofocus: true,
-                  autocorrect: true,
-                  decoration: const InputDecoration(labelText: "Your Name"),
-                  controller: nameInputController,
-                ),
-              ),
-              Expanded(
-                child: TextField(
-                  autofocus: true,
-                  autocorrect: true,
-                  decoration: const InputDecoration(labelText: "Your Title"),
-                  controller: titleInputController,
-                ),
-              ),
-              Expanded(
-                child: TextField(
-                  autofocus: true,
-                  autocorrect: true,
-                  decoration:
-                      const InputDecoration(labelText: "Your Description"),
-                  controller: descriptionInputController,
-                ),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                nameInputController!.clear();
-                titleInputController!.clear();
-                descriptionInputController!.clear();
-                Navigator.pop(context);
-              },
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (nameInputController!.text.isNotEmpty &&
-                    titleInputController!.text.isNotEmpty &&
-                    descriptionInputController!.text.isNotEmpty) {
-                  FirebaseFirestore.instance.collection("board").add({
-                    "name": nameInputController!.text,
-                    "title": titleInputController!.text,
-                    "description": descriptionInputController!.text,
-                    "timestamp": DateTime.now(),
-                  }).then((response) {
-                    print(response.id);
-                    Navigator.pop(context);
-                    nameInputController!.clear();
-                    titleInputController!.clear();
-                    descriptionInputController!.clear();
-                  }).catchError((error) => print(error));
-                }
-              },
-              child: const Text("Save"),
-            )
-          ],
-        );
-      },
-    );
+  TextEditingController nameInputController = TextEditingController();
+  TextEditingController titleInputController = TextEditingController();
+  TextEditingController descriptionInputController = TextEditingController();
+  void _add(
+      {required String name,
+      required String title,
+      required String description}) {
+    FirebaseFirestore.instance.collection("board").add({
+      "name": name,
+      "title": title,
+      "description": description,
+      "timestamp": DateTime.now(),
+    });
   }
 
   @override
@@ -104,7 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showDialog(context);
+          var showDialogFunction2 = showDialogFunction(
+              context: context,
+              titleInputController: titleInputController,
+              nameInputController: nameInputController,
+              descriptionInputController: descriptionInputController,
+              isUpdate: false);
         },
         child: const Icon(FontAwesomeIcons.pen),
       ),

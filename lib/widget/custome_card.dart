@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import "./show_dialog.dart";
 import 'package:intl/intl.dart';
 
 class CustomCard extends StatelessWidget {
@@ -21,6 +22,13 @@ class CustomCard extends StatelessWidget {
     var timeToDate = DateTime.fromMillisecondsSinceEpoch(
         snapshotData["timestamp"].seconds * 1000);
     var dateFormatted = DateFormat("EEE, MM, d, y").format(timeToDate);
+
+    TextEditingController nameInputController =
+        TextEditingController(text: snapshotData["name"]);
+    TextEditingController titleInputController =
+        TextEditingController(text: snapshotData["title"]);
+    TextEditingController descriptionInputController =
+        TextEditingController(text: snapshotData["description"]);
 
     return Column(
       children: <Widget>[
@@ -58,7 +66,16 @@ class CustomCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialogFunction(
+                            context: context,
+                            titleInputController: titleInputController,
+                            nameInputController: nameInputController,
+                            descriptionInputController:
+                                descriptionInputController,
+                            isUpdate: true,
+                            id: id);
+                      },
                       icon: const Icon(
                         FontAwesomeIcons.edit,
                         size: 15,
