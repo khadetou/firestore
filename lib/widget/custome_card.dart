@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class CustomCard extends StatelessWidget {
@@ -15,6 +16,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var snapshotData = snapshot.data!.docs[index];
+    var id = snapshot.data!.docs[index].id;
 
     var timeToDate = DateTime.fromMillisecondsSinceEpoch(
         snapshotData["timestamp"].seconds * 1000);
@@ -23,7 +25,7 @@ class CustomCard extends StatelessWidget {
     return Column(
       children: <Widget>[
         SizedBox(
-          height: 150,
+          height: 190,
           child: Card(
             elevation: 5,
             child: Column(
@@ -51,6 +53,28 @@ class CustomCard extends StatelessWidget {
                       Text(dateFormatted),
                     ],
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        FontAwesomeIcons.edit,
+                        size: 15,
+                      ),
+                    ),
+                    // SizedBox(),
+                    IconButton(
+                      onPressed: () async {
+                        await FirebaseFirestore.instance
+                            .collection("board")
+                            .doc(id)
+                            .delete();
+                      },
+                      icon: const Icon(FontAwesomeIcons.trashAlt, size: 15),
+                    ),
+                  ],
                 )
               ],
             ),
