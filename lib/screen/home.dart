@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "../widget/custome_card.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -116,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (BuildContext context, int index) {
-              return Text(snapshot.data!.docs[index]["title"]);
+              return CustomCard(snapshot: snapshot, index: index);
             },
           );
         },
