@@ -69,7 +69,24 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Text("Cancel"),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                if (nameInputController!.text.isNotEmpty &&
+                    titleInputController!.text.isNotEmpty &&
+                    descriptionInputController!.text.isNotEmpty) {
+                  FirebaseFirestore.instance.collection("board").add({
+                    "name": nameInputController!.text,
+                    "title": titleInputController!.text,
+                    "description": descriptionInputController!.text,
+                    "timestamp": DateTime.now(),
+                  }).then((response) {
+                    print(response.id);
+                    Navigator.pop(context);
+                    nameInputController!.clear();
+                    titleInputController!.clear();
+                    descriptionInputController!.clear();
+                  }).catchError((error) => print(error));
+                }
+              },
               child: const Text("Save"),
             )
           ],
